@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import TeamCard from './TeamCard.jsx';
+import Search from './searchmember.jsx'
 
 const initialTeamMembers = [
   {
@@ -30,6 +31,7 @@ function App() {
   const [team, setTeam] = useState(initialTeamMembers);
   const [selectedIds, setSelectedIds] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [search,setSearch]=useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -70,7 +72,8 @@ function App() {
     setTeam((prev) => prev.filter((m) => !selectedIds.includes(m.id)));
     setSelectedIds([]);
   };
-
+  const filteredMembers=team.filter((member)=>member.name.toLowerCase().includes(search.toLowerCase()));
+   
   return (
     <div className="app-container">
        <h2> JoiningMember</h2>
@@ -149,7 +152,26 @@ function App() {
           />
         ))}
       </div>
+        <Search search={search} setSearch={setSearch}/>
+        <div>
+               <div className="team-list">
+  {filteredMembers.map((member) => (
+    <TeamCard
+      key={member.id}
+      id={member.id}
+      name={member.name}
+      role={member.role}
+      experience={member.experience}
+      selected={selectedIds.includes(member.id)}
+      onToggle={toggleSelect}
+    />
+  ))}
+</div>
+        </div>
+      
+      
     </div>
+    
   );
 }
 
